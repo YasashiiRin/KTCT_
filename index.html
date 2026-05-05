@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Trắc nghiệm - Sự chuyển hoá của tiền thành tư bản & Giá trị thặng dư</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 16px;
+            background: #f5f7fa;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.8rem;
+            color: #1e3c72;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+        .description {
+            font-size: 1rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #ccc;
+        }
+        .question {
+            background: white;
+            margin-bottom: 20px;
+            border-radius: 16px;
+            padding: 20px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e0e7ef;
+        }
+        .question h3 {
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: #0b3b5f;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .options li {
+            margin-bottom: 12px;
+            background: #f9fafc;
+            border-radius: 12px;
+            padding: 12px 12px 12px 8px;
+            transition: background 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+        .options li.correct {
+            background-color: #d4edda;
+            border-color: #2b8c4a;
+            color: #145c33;
+        }
+        .options li.incorrect {
+            background-color: #f8d7da;
+            border-color: #c12a2a;
+            color: #842029;
+        }
+        .options input[type="radio"] {
+            width: 1.3rem;
+            height: 1.3rem;
+            margin-right: 12px;
+            vertical-align: middle;
+            cursor: pointer;
+            accent-color: #007bff;
+        }
+        .options label {
+            font-size: 1rem;
+            line-height: 1.4;
+            display: inline-block;
+            width: calc(100% - 2rem);
+            vertical-align: middle;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        /* Tùy chỉnh cho dễ bấm trên mobile */
+        .options li {
+            cursor: pointer;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 24px 0 20px;
+            transition: 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        button:hover, button:active {
+            background: #0056b3;
+            transform: scale(0.98);
+        }
+        #result {
+            margin-top: 20px;
+            padding: 18px;
+            background: #e9ecef;
+            border-radius: 24px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: none;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 11px;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+            padding-top: 12px;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+            .question {
+                padding: 16px 12px;
+            }
+            .question h3 {
+                font-size: 1.1rem;
+            }
+            .options li {
+                padding: 10px 8px;
+            }
+            .options input[type="radio"] {
+                width: 1.2rem;
+                height: 1.2rem;
+            }
+            .options label {
+                font-size: 0.95rem;
+            }
+            button {
+                padding: 14px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📘 Trắc nghiệm Kinh tế chính trị</h1>
+    <div class="description">✅ Chọn đáp án – xanh: đúng, đỏ: sai. Cuối trang nhấn "Nộp bài" để xem tổng điểm.</div>
+    <form id="quizForm">
+        <div id="questions"></div>
+        <button type="button" onclick="submitQuiz()">📊 Nộp bài để xem tổng điểm</button>
+    </form>
+    <div id="result"></div>
+    <div class="footer">
+        by tuannv❤️ · github.com/YasashiiRin
+    </div>
+</div>
+
+<script>
+    const questions = [
+        // CHỦ ĐỀ 1 (câu 1-18)
+        { q: "Câu 1. Lịch sử phát triển của nền sản xuất xã hội trải qua hai kiểu tổ chức kinh tế nào?", 
+          options: ["Sản xuất tự cung tự cấp và sản xuất hàng hóa", "Sản xuất giá trị thặng dư và sản xuất tự cung tự cấp", "Quá trình trao đổi mua bán và sản xuất hàng hóa", "Sản xuất thông thường và sản xuất tư bản"], 
+          answer: "a" },
+        { q: "Câu 2. Tư bản luôn luôn vận động và vận động trải qua:", 
+          options: ["1 giai đoạn", "2 giai đoạn", "3 giai đoạn", "4 giai đoạn"], answer: "c" },
+        { q: "Câu 3. Hãy cho biết biện pháp cơ bản để có giá trị thặng dư siêu ngạch?", 
+          options: ["Tăng năng suất lao động xã hội", "Tăng cường độ lao động", "Tăng năng suất lao động cá biệt cao hơn năng suất lao động xã hội", "Vừa kéo dài ngày lao động vừa tăng năng suất lao động cá biệt"], 
+          answer: "c" },
+        { q: "Câu 4. Giá trị sử dụng của hàng hóa sức lao động và giá trị sử dụng của hàng hóa thông thường được thể hiện:", 
+          options: ["Trong quá trình sản xuất", "Trong quá trình tiêu dùng", "Vừa trong quá trình sản xuất lại vừa trong quá trình tiêu dùng", "Cất trữ trong kho"], 
+          answer: "b" },
+        { q: "Câu 5. Chi phí sản xuất tư bản chủ nghĩa là chi phí để:", 
+          options: ["Mua tư liệu sản xuất", "Mua sức lao động", "Mua tư liệu sản xuất và sức lao động", "Mua tư liệu tiêu dùng"], 
+          answer: "c" },
+        { q: "Câu 6. Trong những luận điểm sau, luận điểm nào đúng:", 
+          options: ["Mục đích lưu thông của tư bản là giá trị sử dụng", "Mục đích lưu thông của tư bản là giá trị, hơn nữa là giá trị tăng thêm", "Mục đích lưu thông của tư bản là hàng hóa", "Mục đích lưu thông của tư bản là hàng hóa và tiền tệ"], 
+          answer: "b" },
+        { q: "Câu 7. Công thức lưu thông của hàng hóa giản đơn là:", 
+          options: ["Tiền-Hàng-Tiền", "Tiền-Tiền-Hàng", "Hàng-Tiền-Hàng", "Hàng-Hàng-Tiền"], answer: "c" },
+        { q: "Câu 8. Trong công thức lưu thông của tư bản T-H-T' thì:", 
+          options: ["T' nhỏ hơn T ban đầu", "T' bằng T ban đầu", "T' bằng T ban đầu cộng với giá trị thặng dư", "T' vừa nhỏ hơn lại vừa lớn hơn T ban đầu"], 
+          answer: "c" },
+        { q: "Câu 9. Trong các công thức dưới đây, công thức nào là công thức lưu thông của tư bản:", 
+          options: ["H-T-H'", "T-H-T", "T-H-T'", "H-T-T"], answer: "c" },
+        { q: "Câu 10. Chức năng cơ bản nhất của tiền là gì?", 
+          options: ["Phân biệt người giàu và người nghèo, tạo ra sự phân chia giai cấp trong xã hội", "Phương tiện thanh toán hàng hoá", "Phương tiện lưu thông", "Phương tiện trao đổi trong quá trình mua bán"], 
+          answer: "c" },
+        { q: "Câu 11. Yếu tố nào sau đây có giá trị quyết định tạo nên giá cả của hàng hoá?", 
+          options: ["Thời gian và công sức của người lao động bỏ ra để tạo nên sản phẩm đó", "Giá trị hàng hoá", "Số vốn và công sức bỏ ra cộng thêm lợi nhuận", "Dựa theo mức giá của các đối thủ cạnh tranh trong ngành"], 
+          answer: "b" },
+        { q: "Câu 12. Để sức lao động trở thành hàng hoá cần những điều kiện nào sau đây ?", 
+          options: ["Người lao động được tự do về thân thể và không có tư liệu sản xuất", "Sản phẩm tạo ra đạt tiêu chuẩn và điều kiện để tung ra thị trường", "Sản phẩm tạo ra thỏa mãn được nhu cầu nào đó của người tiêu dùng", "Người lao động bán sức lao động của mình cho chủ và họ có toàn quyền sở hữu sức lao động của người lao động"], 
+          answer: "a" },
+        { q: "Câu 13. Từ định nghĩa phương pháp sản xuất giá trị thặng dư tuyệt đối hãy chọn câu đúng:", 
+          options: ["Độ dài ngày lao động bằng ngày tự nhiên", "Độ dài ngày lao động lớn hơn không", "Độ dài ngày lao động bằng thời gian lao động tất yếu", "Độ dài ngày lao động lớn hơn thời gian lao động tất yếu"], 
+          answer: "d" },
+        { q: "Câu 14. Phương pháp sản xuất giá trị thặng dư tuyệt đối là phương pháp sản xuất giá trị thặng dư bằng cách kéo dài thời gian lao động thặng dư trong khi:", 
+          options: ["Năng suất lao động thay đổi, giá trị sức lao động và thời gian lao động tất yếu không thay đổi", "Năng suất lao động và giá trị sức lao động thay đổi, thời gian lao động tất yếu không thay đổi", "Năng suất lao động, giá trị sức lao động và thời gian lao động tất yếu không thay đổi", "Năng suất lao động, giá trị sức lao động và thời gian lao động tất yếu thay đổi"], 
+          answer: "c" },
+        { q: "Câu 15. Khi xem xét phương pháp sản xuất giá trị thặng dư tuyệt đối, ý nào dưới đây không đúng:", 
+          options: ["Cường độ lao động không đổi", "Thời gian lao động cần thiết thay đổi", "Ngày lao động thay đổi", "Thời gian lao động thặng dư thay đổi"], 
+          answer: "b" },
+        { q: "Câu 16. Cơ sở chung của giá trị thặng dư tương đối và giá trị thặng dư siêu ngạch:", 
+          options: ["Tăng năng suất lao động cá biệt", "Tăng năng suất lao động", "Tăng năng suất lao động xã hội", "Giảm giá trị sức lao động"], 
+          answer: "b" },
+        { q: "Câu 17. Giá trị thặng dư tương đối là:", 
+          options: ["Giá trị thặng dư thu được nhờ rút ngắn thời gian lao động tất yếu", "Giá trị thặng dư thu được nhờ rút ngắn thời gian lao động chủ yếu", "Giá trị thặng dư thu được nhờ kéo dài thời gian lao động tất yếu", "Giá trị thặng dư thu được nhờ kéo dài thời gian lao động chủ yếu"], 
+          answer: "a" },
+        { q: "Câu 18. Để hạ thấp giá trị sức lao động thì phải:", 
+          options: ["Làm giảm giá trị các tư liệu sinh hoạt và dịch vụ cần thiết để tái sản xuất sức lao động", "Làm tăng giá trị các tư liệu sinh hoạt và dịch vụ cần thiết để tái sản xuất sức lao động", "Giảm năng suất lao động trong các ngành sản xuất ra tư liệu sinh hoạt", "Giảm ngành sản xuất ra tư liệu sản xuất để chế tạo ra tư liệu sinh hoạt đó"], 
+          answer: "a" },
+        // CHỦ ĐỀ 2 (câu 19-30)
+        { q: "Câu 19. Công thức tính tỷ suất giá trị thặng dư là công thức nào sau đây?", 
+          options: ["m' = (m/v).100%", "M = m' . V", "m' = n.M", "m = D.v"], answer: "a" },
+        { q: "Câu 20. Cho công thức m' = (t / t') . 100%. Hỏi trong công thức đó t' là gì?", 
+          options: ["t' là thời gian chuyển động", "t' là thời gian lao động cần thiết", "t' tốc độ bay trong không gian", "t' thời gian lao động thặng dư"], answer: "d" },
+        { q: "Câu 21. Có mấy phương pháp sản xuất giá trị thặng dư?", 
+          options: ["1", "2", "3", "4"], answer: "b" },
+        { q: "Câu 22. Tư bản bất biến và tư bản khả biến thuộc phạm trù tư bản nào?", 
+          options: ["Tư bản tiền tệ", "Tư bản sản xuất", "Tư bản hàng hóa", "Tư bản lưu thông"], answer: "a" },
+        { q: "Câu 23. Tư bản khả biến?", 
+          options: ["Là bộ phận tư bản tồn tại dưới dạng sức lao động", "Công nhân tiêu dùng vào mục đích cá nhân", "Tồn tại dưới hình thức tiền lương", "Là bộ phận tư bản tồn tại dưới dạng tư liệu sản xuất"], 
+          answer: "a" },
+        { q: "Câu 24. Tư bản khả biến (v) là:", 
+          options: ["Bộ phận trực tiếp tạo ra giá trị sử dụng", "Bộ phận trực tiếp tạo ra giá trị thặng dư", "Bộ phận trực tiếp tạo ra sản phẩm thặng dư", "Bộ phận gián tiếp tạo ra giá trị thặng dư"], 
+          answer: "b" },
+        { q: "Câu 25. Giá trị thặng dư siêu ngạch và giá trị thặng dư tương đối cùng có một cơ sở chung đó là dựa trên cơ sở:", 
+          options: ["Tăng năng suất lao động", "Giảm năng suất lao động", "Tăng giá trị các tư liệu sinh hoạt và dịch vụ cần thiết", "Giảm giá trị các tư liệu sinh hoạt và dịch vụ cần thiết"], 
+          answer: "a" },
+        { q: "Câu 26. Giá trị thặng dư siêu ngạch còn được gọi là:", 
+          options: ["Hình thái biến tướng của giá trị thặng dư tuyệt đối", "Hình thái biến tướng của giá trị thặng dư tương đối", "Hình thái biến chất của giá trị thặng dư tuyệt đối", "Hình thái biến chất của giá trị thặng dư tuyệt đối"], 
+          answer: "b" },
+        { q: "Câu 27. Chọn ý sai về đặc điểm của giá trị thặng dư siêu ngạch trong nền đại công nghiệp:", 
+          options: ["Là động lực mạnh nhất thúc đẩy các nhà tư bản ra sức cải tiến kỹ thuật, tăng năng suất lao động", "Dựa trên cơ sở tăng năng suất lao động cá biệt", "Biểu hiện mối quan hệ giữa công nhân làm thuê-nhà tư bản và mối quan hệ giữa các nhà tư bản với nhau", "Giá trị thặng dư siêu ngạch là hình thái biến tướng của giá trị thặng dư tuyệt đối"], 
+          answer: "d" },
+        { q: "Câu 28. Trong những đáp án nào dưới đây đáp án nào SAI với tư bản bất biến?", 
+          options: ["Tư bản bất biến đóng vai trò quyết định trong quá trình sản xuất giá trị thặng dư", "Tư bản bất biến tồn tại dưới hình thái tư liệu sản xuất", "Tư bản bất biến là giá trị không đổi trong quá trình sản xuất", "Là tiền đề cho năng suất lao động tăng"], 
+          answer: "a" },
+        { q: "Câu 29. Để sản xuất ra cái bàn thì chi phí cần mua gỗ là 500.000vnđ. Các chi phí khác (ốc vít, sơn,...) là 200.000vnđ. Một người/ngày sản xuất được 1 cái bàn. Lương của công nhân một ngày là 250.000vnđ. Vậy giá trị của tư bản bất biến (c) là ?", 
+          options: ["250.000 vnđ", "950.000 vnđ", "700.000 vnđ", "200.000 vnđ"], answer: "c" },
+        { q: "Câu 30. Thành phần nào dưới đây không thuộc tư bản bất biến?", 
+          options: ["Máy móc", "Nhà xưởng", "Con người", "Nguyên liệu nhiên liệu"], answer: "c" },
+        // CHỦ ĐỀ 3 (câu 31-45)
+        { q: "Câu 31. Bản chất của tiền công là gì?", 
+          options: ["Là giá cả của lao động", "Là giá cả của hàng hóa sức lao động", "Là giá cả của hàng hóa sức lao động và nó được biểu hiện ra bên ngoài như là giá cả của lao động", "Là giá cả của lao động và nó được biểu hiện ra bên ngoài như là giá cả của hàng hóa sức lao động"], 
+          answer: "c" },
+        { q: "Câu 32. Chọn câu trả lời đúng:", 
+          options: ["Cái mà nhà tư bản bỏ tiền ra mua là lao động", "Toàn bộ lao động trong cả ngày của công nhân là phương tiện để có tiền sinh sống, do đó bản thân công nhân đang bán lao động", "Đặc điểm của hàng hóa sức lao động đôi khi tách khỏi người bán", "Tiền công đã che đậy mọi dấu vết của sự phân chia ngày lao động thành thời gian lao động tất yếu và thời gian lao động thặng dư, do đó tiền công che đậy mất bản chất bóc lột của chủ nghĩa tư bản"], 
+          answer: "d" },
+        { q: "Câu 33. Giá cả của hàng hóa sức lao động được biểu hiện ra bên ngoài như là giá cả của lao động vì:", 
+          options: ["Công nhân bán quyền sử dụng sức lao động", "Công nhân phải có lao động mới có tiền công", "Công nhân nhận tiền công trước khi lao động", "Công nhân bán quyền sử dụng sức lao động, và phải lao động mới nhận được tiền công sau khi đã lao động"], 
+          answer: "d" },
+        { q: "Câu 34. Tiền công danh nghĩa là gì?", 
+          options: ["Số tiền biểu hiện bằng số lượng hàng hóa tiêu dùng mà người công nhân mua được", "Số tiền mà người công nhân nhận được do bán sức lao động cho nhà tư bản", "Số tiền biểu hiện bằng những dịch vụ mà người công nhân mua được", "Tiền đề của tiền công thực tế"], 
+          answer: "b" },
+        { q: "Câu 35. Theo C.Mác, đâu là quy luật của sự vận động tiền công trong quá trình phát triển của CNTB?", 
+          options: ["Có xu hướng giảm xuống, nhưng mức giảm không theo kịp mức tăng giá cả tư liệu tiêu dùng và dịch vụ", "Có xu hướng tăng mạnh, mức tăng luôn đi song song với mức tăng giá cả tư liệu tiêu dùng và dịch vụ", "Có xu hướng giảm mạnh, có xu hướng làm cho tiền công thực tế của công nhân hạ thấp", "Có xu hướng tăng lên, nhưng mức tăng nhiều khi không theo kịp giá cả tư liệu tiêu dùng và dịch vụ"], 
+          answer: "d" },
+        { q: "Câu 36. Đâu là nhân tố gây cản trở xu hướng hạ thấp tiền công?", 
+          options: ["Cuộc đấu tranh của giai cấp công nhân đòi tăng tiền công", "Nhu cầu về số lượng lao động chất lượng thấp", "Cuộc cách mạng chống chủ nghĩa tư bản", "Quy luật của sự vận động tiền công trong CNTB"], 
+          answer: "a" },
+        { q: "Câu 37. Câu nào sau đây phân biệt đúng về tiền lương và tiền công?", 
+          options: ["Tiền lương là số tiền cố định được trả, tiền công là tiền trả theo giờ hoặc theo ngày", "Tiền lương là số tiền trả theo giờ hoặc theo ngày, tiền công là tiền cố định được trả", "Tiền lương không phụ thuộc vào kết quả lao động, tiền công được xác định và thỏa thuận giữa người sử dụng lao động và người lao động"], 
+          answer: "a" },
+        { q: "Câu 38. Muốn đánh giá chính xác mức tiền công không chỉ căn cứ vào tiền công ngày mà còn căn cứ vào:", 
+          options: ["Tháng, giờ, phút, giây", "Độ dài ngày lao động và cường độ lao động", "Người lao động"], 
+          answer: "b" },
+        { q: "Câu 39. Khái niệm về tiền công tính theo thời gian:", 
+          options: ["Là tiền công được biểu hiện bằng số lượng hàng hóa tiêu dùng và dịch vụ mà công nhân mua được bằng tiền công danh nghĩa của mình", "Là hình thức tiền công tính theo số lượng sản phẩm đã làm ra, hoặc số lượng công việc đã hoàn thành trong một thời gian nhất định", "Là số tiền mà người công nhân nhận được do bán sức lao động của mình cho nhà tư bản", "Là hình thức tiền công tính theo thời gian lao động của công nhân dài hay ngắn (giờ, ngày, tuần, tháng)"], 
+          answer: "d" },
+        { q: "Câu 40. Điền vào chỗ trống: Giá trị thặng dư là một phần của ... dôi ra ngoài giá trị sức lao động do ... tạo ra.", 
+          options: ["Giá trị cũ, người lao động", "Giá trị cũ, nhà tư bản", "Giá trị mới, người lao động", "Giá trị mới, nhà tư bản"], 
+          answer: "c" },
+        { q: "Câu 41. Nguồn gốc của tiền công là:", 
+          options: ["Một loại hàng hóa được trả cho người làm thuê", "Hao phí sức lao động của người lao động làm thuê tự trả cho mình thông qua sổ sách của người mua hàng hóa sức lao động", "Hao phí vật chất của người lao động làm thuê tự trả cho mình thông qua sổ sách của người mua hàng hóa sức lao động", "Sự đền bù được chi trả cho thời gian, tiền bạc, chất xám mà người làm thuê bỏ ra để tạo ra hàng hóa"], 
+          answer: "b" },
+        { q: "Câu 42. Nguồn gốc của giá trị thặng dư:", 
+          options: ["Do lao động của người lao động làm thuê hao phí tạo ra mà người mua hàng hóa sức lao động thu được ngay dưới dạng hình thái tiền dù hàng hóa ấy có bán được hay không", "Do lao động của người lao động làm thuê hao phí sức lao động tạo ra mà người mua hàng hóa sức lao động thu được dưới dạng hình thái tiền chỉ khi hàng hóa được sản xuất ra ấy phải được bán đi", "Do lao động của người lao động làm thuê hao phí tạo ra mà người mua hàng hóa sức lao động thu được thành quả dưới bất kì dạng nào mà không cần thực hiện giá trị thặng dư", "Do lao động của người lao động làm thuê hao phí vật chất tạo ra mà người mua hàng hóa sức lao động thu được dưới dạng hình thái tiền chỉ khi hàng hóa được sản xuất ra ấy phải được bán đi"], 
+          answer: "b" },
+        { q: "Câu 43. Tiền công tính theo thời gian và tiền công tính theo sản phẩm có quan hệ với nhau thế nào?", 
+          options: ["Không có quan hệ gì", "Hai hình thức tiền công áp dụng cho các loại công việc có đặc điểm khác nhau", "Trả công theo sản phẩm dễ quản lý hơn trả tiền công theo thời gian", "Tiền công tính theo sản phẩm là hình thức chuyển hóa của tiền công tính theo thời gian"], 
+          answer: "d" },
+        { q: "Câu 44. Hai hình thức tiền công cơ bản là:", 
+          options: ["Tiền công theo thời gian và tiền công theo lao động", "Tiền công theo giờ và tiền công theo sản phẩm", "Tiền công theo thời gian và tiền công theo sản phẩm", "Tiền công theo tháng và tiền công theo sản phẩm"], 
+          answer: "c" },
+        { q: "Câu 45. Nhân tố nào là một trong những nhân tố quyết định trực tiếp tiền công tính theo sản phẩm?", 
+          options: ["Số lượng sản phẩm", "Thành phần sản phẩm", "Nguyên liệu sản phẩm", "Tổng giá trị của tất cả sản phẩm"], 
+          answer: "a" }
+    ];
+
+    let html = '';
+    questions.forEach((item, index) => {
+        html += `<div class="question">
+            <h3>${item.q}</h3>
+            <ul class="options" id="options-${index}">`;
+        item.options.forEach((opt, i) => {
+            const value = String.fromCharCode(97 + i);
+            html += `<li id="li-${index}-${value}">
+                        <input type="radio" name="q${index}" value="${value}" id="q${index}_${value}">
+                        <label for="q${index}_${value}">${opt}</label>
+                      </li>`;
+        });
+        html += `</ul></div>`;
+    });
+    document.getElementById('questions').innerHTML = html;
+
+    // Gắn sự kiện change
+    questions.forEach((item, index) => {
+        const radios = document.querySelectorAll(`input[name="q${index}"]`);
+        radios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                const selectedValue = this.value;
+                const optionList = document.getElementById(`options-${index}`);
+                optionList.querySelectorAll('li').forEach(li => li.classList.remove('correct', 'incorrect'));
+                if (selectedValue === item.answer) {
+                    document.getElementById(`li-${index}-${selectedValue}`).classList.add('correct');
+                } else {
+                    document.getElementById(`li-${index}-${selectedValue}`).classList.add('incorrect');
+                    const correctValue = item.answer;
+                    document.getElementById(`li-${index}-${correctValue}`).classList.add('correct');
+                }
+            });
+        });
+    });
+
+    function submitQuiz() {
+        let score = 0;
+        questions.forEach((item, index) => {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            if (selected && selected.value === item.answer) score++;
+        });
+        const percent = (score / questions.length * 100).toFixed(2);
+        document.getElementById('result').innerHTML = `<h2>📋 Kết quả: ${score}/${questions.length} (${percent}%)</h2>`;
+        document.getElementById('result').style.display = 'block';
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+</script>
+</body>
+</html>
